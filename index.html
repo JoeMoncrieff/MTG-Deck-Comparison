@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <title>Deck Compare</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="bg-image">
+
+    <div id="title-div">
+      <h1 id="title">ShoePaste's Deck Comparison Tool</h1>
+    </div>
+
+    <script src="buttonScripts.js"></script>
+    <div id="words-wrapper">
+
+
+    </div>
+
+    <div id="button-block-wrapper">
+      <div id="button-wrapper">
+        <button id="deck-button" onclick="buttonClick(1)">Click to upload Deck 1</button>
+      </div>
+      <div id="button-wrapper">
+        <button id="deck-button" onclick="buttonClick(2)">Click to upload Deck 2</button>
+      </div>
+    </div>
+
+    <div id="compare-button-wrapper">
+      <button id="compare-button" onclick="compareDecks()">Compare</button>
+    </div>
+
+    <div id="deck-display-wrapper">
+      <div>
+        <p class="deck-card" id="card-1"> Deck 1 will appear here :)</p>
+      </div>
+
+      <div>
+        <p class="deck-card" id="card-2"> Deck 2 will appear here :)</p>
+      </div>
+
+      <div class="deck-card-compare">
+        <h3> Added (In Deck 2 and not in Deck 1) </h3>
+        <p id="cards-added"> None </p>
+
+        <h3> Removed (In Deck 1 and not in Deck 2) </h3>
+        <p id="cards-removed"> None </p>
+      </div>
+    </div>
+
+
+  </div>
+</body>
+</html>

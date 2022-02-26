@@ -1,0 +1,126 @@
+/*colour scheme https://visme.co/blog/website-color-schemes/  */
+:root {
+  --bgMain: #0B0C10;
+  /*--bgDeckTabs: #C5C6C7;*/
+  --bgDeckTabs: #1d1c45;
+  /*--fontMainColour: #45A29E*/
+  --fontMainColour: #ffffff;
+  --outLineColour: #66FCF1;
+}
+
+
+
+body {
+  /*background-color: var(--bgMain);*/
+  margin:0px;
+}
+
+#title-div{
+  display:flex;
+  justify-content:center;
+}
+
+#title{
+  margin-top:0px;
+  padding-top:8px;
+  color: var(--outLineColour);
+}
+
+.bg-image {
+  margin: 0px;
+  padding:0px;
+  background-image: url("res/backgrounds/bg1.png");
+  background-color: #1F2833;
+  min-height:1000px;
+  background-position: center;
+  background-size: cover;
+  background-repeat:repeat;
+  position: relative;
+}
+
+#compare-button-wrapper {
+  display:flex;
+  justify-content:center;
+}
+
+#compare-button {
+  width: 100px;
+  height: 50px;
+  border-radius: 20px;
+  background-color: var(--bgDeckTabs);
+  color: var(--fontMainColour);
+  border-color: var(--outLineColour);
+  font-weight: 600;
+  font-size: 16px;
+}
+
+#button-block-wrapper {
+  display:flex;
+  justify-content:center;
+}
+
+#button-wrapper {
+  padding:6px;
+}
+
+#deck-display-wrapper {
+  display:flex;
+  justify-content:center;
+}
+
+.deck-card {
+  width: 400px;
+  border-radius:10px;
+  background-color: var(--bgDeckTabs);
+  color: var(--fontMainColour);
+  font-weight: 600;
+  font-size: 14px;
+  padding:10px;
+  margin:10px;
+  border:solid;
+  border-color:var(--outLineColour);
+  border-width:3px;
+  white-space:pre-line;
+}
+
+.deck-card-compare {
+  width: 400px;
+  border-radius: 10px;
+  background-color: var(--bgDeckTabs);
+  color: var(--fontMainColour);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px;
+  margin: 10px;
+  border: solid;
+  border-color: var(--outLineColour);
+  border-width: 3px;
+}
+
+#cards-added {
+  color: #49dd89;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: pre-line;
+  margin:0px;
+}
+
+#cards-removed {
+  color: #DB3512;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: pre-line;
+  margin:0px;
+}
+
+
+#deck-button {
+  width: 200px;
+  height: 100px;
+  border-radius: 20px;
+  background-color: var(--bgDeckTabs);
+  color: var(--fontMainColour);
+  border-color: var(--outLineColour);
+  font-weight:600;
+  font-size:24px;
+}
