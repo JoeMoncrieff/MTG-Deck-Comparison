@@ -9,7 +9,12 @@ This is a project which would see users able to tell the card changes from 2 dec
 
 ### Todo
 
-# read from .dek files
-# allow CTRL-C CTRL-V
+read from .dek files --> Done
 
-# Allow Hover to see cards
+Make the comparison split more robust (not split on only return + newline characters)
+
+allow CTRL-C CTRL-V
+
+Make it an option to care about sb or not
+
+Allow Hover to see cards

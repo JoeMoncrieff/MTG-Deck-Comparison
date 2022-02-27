@@ -8,6 +8,10 @@ function buttonClick(buttonNumber) {
     // getting a hold of the file reference
     var file = e.target.files[0];
 
+    //Getting the file name and extensions for display purposes.
+    var fileExt = file.name.split(".")[1];
+    var fileName = file.name.split(".")[0];
+
     // setting up the reader
     var reader = new FileReader();
     reader.readAsText(file, 'UTF-8');
@@ -15,6 +19,12 @@ function buttonClick(buttonNumber) {
     // here we tell the reader what to do when it's done reading...
     reader.onload = readerEvent => {
       var content = readerEvent.target.result; // this is the content!
+
+      //Depending on the file type we would like to do things to it first
+      if (fileExt.toUpperCase() == "DEK") {
+        content = DecipherForDek(content)
+      }
+
 
       //We make a function to display the content here :)
       console.log(content);
@@ -68,8 +78,9 @@ function compareDecks() {
   var list1 = deck1.split("\r\n");
   var list2 = deck2.split("\r\n");
 
-  console.log(deck1);
+  
   console.log(list1);
+  console.log(list2);
 
   noNumList1 = splitLists(list1);
   noNumList2 = splitLists(list2);
@@ -148,4 +159,74 @@ function addToComparison(arr, sign) {
 
   return text;
 }
+
+//we are given a Dek file in string format
+//cards or in the form: <Cards CatID="23248" Quantity="2" Sideboard="false" Name="Selesnya Sanctuary" Annotation="0" />
+
+function DecipherForDek(cardList) {
+  var mainBoard = ""
+  var sideBoard = ""
+  var dictMB = {}
+  var dictSB = {}
+
+
+  //Remove all White Space
+  cardList.replace(/\s+/g,'')
+  // Split on "<"
+  cardElementList = cardList.split("<")
+  //For each
+  for (i = 0; i < cardElementList.length; i++) {
+    card = cardElementList[i];
+    //Check if card
+    if (card.substring(0, 5) === "Cards") {
+
+      var qty = 0;
+      var name = "";
+      var sb = 'true';
+      card = card.substring(5)
+      attachments = card.split("\"")
+
+      for (j = 0; j < attachments.length; j = j + 2) {
+        curr = attachments[j];
+        console.log(curr);
+        if (curr.trim() == "Quantity=".trim()) {
+          qty = attachments[j+1]
+        } else if (curr.trim() == "Sideboard=".trim()) {
+          sb = attachments[j+1]
+        } else if (curr.trim() == "Name=".trim()) {
+          name = attachments[j + 1]
+        }
+      }
+
+      // Sorting requires alphabetical order
+
+      if (sb === 'false') {
+        dictMB[name] = qty
+      } else {
+        dictSB[name] = qty
+      }
+
+    }
+  }
+
+  //Mass sorting alphabetically
+  sortMB = Object.keys(dictMB)
+  sortMB.sort();
+  for (i = 0; i < sortMB.length; i++) {
+    name = sortMB[i]
+    mainBoard += dictMB[name] + " " + name + "\r\n";
+  }
+
+  sortSB = Object.keys(dictSB);
+  sortSB.sort();
+  for (i = 0; i < sortSB.length; i++) {
+    name = sortSB[i]
+    sideBoard += dictSB[name] + " " + name + "\r\n";
+  }
+  
+
+  return mainBoard + "\r\n" + sideBoard;
+
+}
+
 
