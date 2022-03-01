@@ -14,10 +14,6 @@
     </div>
 
     <script src="buttonScripts.js"></script>
-    <div id="words-wrapper">
-
-
-    </div>
 
     <div id="button-block-wrapper">
       <div id="button-wrapper">
@@ -33,6 +29,14 @@
     </div>
 
     <div id="deck-display-wrapper">
+      <div id="copy-paste-wrapper">
+        <div id="submit-button-wrapper">
+          <button class="copy-submit-1" onclick="addCopyPaste(1)">Add List to Deck 1</button>
+          <button class="copy-submit-2" onclick="addCopyPaste(2)">Add List to Deck 2</button>
+        </div>
+        <textarea draggable="false" rows="35" type="text" class="deck-card-copy" id="deck-box" name="deckbox" placeholder="copy and paste your list here"></textarea>
+      </div>
+
       <div>
         <p class="deck-card" id="card-1"> Deck 1 will appear here :)</p>
       </div>

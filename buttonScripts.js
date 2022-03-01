@@ -53,16 +53,73 @@ function splitLists(listToSplit) {
   for (let i = 0; i < listToSplit.length; i++) {
     elem = listToSplit[i];
     console.log(elem);
-    var noOfTimes = parseInt(elem.substr(0, 1));
-    console.log(noOfTimes);
+    var seperate = elem.split(" ");
+
+    var noOfTimes = parseInt(seperate[0]);
+    //console.log(noOfTimes);
 
     for (j = 0; j < noOfTimes; j++) {
-      nonumlist.push(elem.substr(2, elem.length))
+      nonumlist.push(elem.substr(seperate[0].length, elem.length))
     }
 
   }
 
   return nonumlist
+}
+
+
+function addCopyPaste(number) {
+  var deckElem;
+  dict = {};
+  returnString = "";
+
+  if (number == 1) {
+    deckElem = document.getElementById('card-1');
+  } else if (number == 2) {
+    deckElem = document.getElementById('card-2');
+  }
+
+  //Get the text area text.
+  textAreaElem = document.getElementById('deck-box');
+  text = textAreaElem.value
+  //split on new line
+  textArr = text.split("\n")
+
+
+  //This for loop assumes the formatting is "qty CARD_NAME"
+  for (i = 0; i < textArr.length; i++) {
+    qty = 0;
+    name = "";
+    line = textArr[i].trim();
+    lineParts = line.split(" ");
+    qty = lineParts[0];
+    name = line.substring(qty.length);
+    dict[name] = qty;
+
+    //TODO: duplicates mess things up here
+    //TODO: Check for potential errors here
+   
+  }
+  sortCards = Object.keys(dict)
+  sortCards.sort();
+  for (i = 0; i < sortCards.length; i++) {
+    name = sortCards[i]
+    returnString += dict[name] + " " + name + "\r\n";
+  }
+
+
+  //Set return string here
+
+  deckElem.textContent = returnString;
+
+  //Add all info to a dictionary.
+
+  //Sort alphabetically.
+
+  //Add to string.
+
+  //put string onto deck card.
+
 }
 
 
@@ -96,13 +153,16 @@ function compareDecks() {
   index2 = 0;
 
   while (true) {
+    //Case where both are equivalent
     if (noNumList1[index1] == noNumList2[index2]) {
       index1++;
       index2++;
+    //Case where left list is alphabetically smaller
     } else if (noNumList1[index1] < noNumList2[index2]) {
       //add index1 to removed list
       removed.push(noNumList1[index1]);
       index1++;
+    //Case where right list is alphabetically smaller
     } else {
       added.push(noNumList2[index2]);
       index2++;
@@ -118,7 +178,7 @@ function compareDecks() {
 
     if (index2 >= noNumList2.length) {
       while (index1 < noNumList1.length) {
-        added.push(noNumList1[index1]);
+        removed.push(noNumList1[index1]);
         index1++;
       }
       break;
@@ -199,6 +259,7 @@ function DecipherForDek(cardList) {
       }
 
       // Sorting requires alphabetical order
+      // We us a dictionary here so we can sort the keys later
 
       if (sb === 'false') {
         dictMB[name] = qty

@@ -10,10 +10,9 @@ This is a project which would see users able to tell the card changes from 2 dec
 ### Todo
 
 read from .dek files --> Done
+allow CTRL-C CTRL-V --> Done
 
 Make the comparison split more robust (not split on only return + newline characters)
-
-allow CTRL-C CTRL-V
 
 Make it an option to care about sb or not
 
