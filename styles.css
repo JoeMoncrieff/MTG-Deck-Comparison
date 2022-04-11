@@ -1,11 +1,16 @@
 /*colour scheme https://visme.co/blog/website-color-schemes/  */
 :root {
-  --bgMain: #0B0C10;
+  --bgMain: #ffffff;
   /*--bgDeckTabs: #C5C6C7;*/
-  --bgDeckTabs: #1d1c45;
+  --bgDeckTabs: #ffffff;
   /*--fontMainColour: #45A29E*/
-  --fontMainColour: #ffffff;
-  --outLineColour: #66FCF1;
+  --fontMainColour: #000000;
+  --outLineColour: #A662D3;
+  --bgColour:#ffffff;
+  --borderWidths:3px;
+  --boxShadow: 1px 1px 8px #9649cb;
+
+  --fontColourAdded: #00BD9D; 
 }
 
 
@@ -18,19 +23,22 @@ body {
 #title-div{
   display:flex;
   justify-content:center;
+  background-color: #A662D3;
+  background-image: url("res/backgrounds/TitleBar.png");
+  box-shadow: 5px 1px 10px #8a36c3;
 }
 
 #title{
-  margin-top:0px;
-  padding-top:8px;
-  color: var(--outLineColour);
+  margin-top:2px;
+  padding-top:10px;
+  color: var(--bgMain);
 }
 
 .bg-image {
   margin: 0px;
   padding:0px;
-  background-image: url("res/backgrounds/bg1.png");
-  background-color: #1F2833;
+  /*background-image: url("res/backgrounds/bg1.png");*/
+  background-color: var(--bgColour);
   min-height:1000px;
   background-position: center;
   background-size: cover;
@@ -47,11 +55,13 @@ body {
   width: 100px;
   height: 50px;
   border-radius: 20px;
+  border-width: var(--borderWidths);
   background-color: var(--bgDeckTabs);
   color: var(--fontMainColour);
   border-color: var(--outLineColour);
   font-weight: 600;
   font-size: 16px;
+  box-shadow: var(--boxShadow);
 }
 
 #button-block-wrapper {
@@ -79,8 +89,9 @@ body {
   margin:10px;
   border:solid;
   border-color:var(--outLineColour);
-  border-width:3px;
+  border-width:var(--borderWidths);
   white-space:pre-line;
+  box-shadow: var(--boxShadow);
 }
 
 .deck-card-compare {
@@ -94,21 +105,22 @@ body {
   margin: 10px;
   border: solid;
   border-color: var(--outLineColour);
-  border-width: 3px;
+  border-width: var(--borderWidths);
+  box-shadow: var(--boxShadow);
 }
 
 #cards-added {
-  color: #49dd89;
-  font-weight: 600;
-  font-size: 14px;
+  color: var(--fontColourAdded);
+  font-weight: 700;
+  font-size: 16px;
   white-space: pre-line;
   margin:0px;
 }
 
 #cards-removed {
   color: #DB3512;
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: 700;
+  font-size: 16px;
   white-space: pre-line;
   margin:0px;
 }
@@ -118,11 +130,13 @@ body {
   width: 200px;
   height: 100px;
   border-radius: 20px;
+  border-width: var(--borderWidths);
   background-color: var(--bgDeckTabs);
   color: var(--fontMainColour);
   border-color: var(--outLineColour);
   font-weight:600;
   font-size:24px;
+  box-shadow: var(--boxShadow);
 }
 
 
@@ -141,8 +155,9 @@ body {
   border-color: var(--outLineColour);
   background-color: var(--bgDeckTabs);
   color: var(--fontMainColour);
-  border-width: 3px;
+  border-width: var(--borderWidths);
   font-weight:inherit;
+  box-shadow: var(--boxShadow);
 }
 
 .copy-submit-2 {
@@ -152,8 +167,9 @@ body {
   border-color: var(--outLineColour);
   background-color: var(--bgDeckTabs);
   color: var(--fontMainColour);
-  border-width: 3px;
+  border-width: var(--borderWidths);
   font-weight: inherit;
+  box-shadow: var(--boxShadow);
 }
 
 .deck-card-copy {
@@ -172,9 +188,10 @@ body {
   margin-bottom: 5px;
   border: solid;
   border-color: var(--outLineColour);
-  border-width: 3px;
+  border-width: var(--borderWidths);
   white-space: pre-line;
   resize:none;
+  box-shadow: var(--boxShadow);
 }
 
 #copy-paste-wrapper {

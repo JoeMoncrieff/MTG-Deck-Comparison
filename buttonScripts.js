@@ -1,3 +1,8 @@
+//Database Methods
+var database;
+var isLoaded = false;
+
+
 
 function buttonClick(buttonNumber) {
   var input = document.createElement('input');
@@ -73,11 +78,15 @@ function addCopyPaste(number) {
   dict = {};
   returnString = "";
 
+  //check for which element you want to add it to
   if (number == 1) {
     deckElem = document.getElementById('card-1');
   } else if (number == 2) {
     deckElem = document.getElementById('card-2');
   }
+  //resetting list here
+  deckElem.textContent = "";
+
 
   //Get the text area text.
   textAreaElem = document.getElementById('deck-box');
@@ -86,40 +95,43 @@ function addCopyPaste(number) {
   textArr = text.split("\n")
 
 
-  //This for loop assumes the formatting is "qty CARD_NAME"
+  //This 'for loop' assumes the formatting is "qty CARD_NAME"
   for (i = 0; i < textArr.length; i++) {
     qty = 0;
-    name = "";
+    var name = "";
     line = textArr[i].trim();
     lineParts = line.split(" ");
+    
     qty = lineParts[0];
-    name = line.substring(qty.length);
-    dict[name] = qty;
+    name = line.substring(qty.length).trim("");
+    qty = parseInt(qty);
+    
 
-    //TODO: duplicates mess things up here
-    //TODO: Check for potential errors here
+    if (name in dict){
+      dict[name] += qty;
+    } else {
+      dict[name] = qty;
+    }
+
+    //TODO: Caps lock differences can mess up duplicates here
    
   }
   sortCards = Object.keys(dict)
   sortCards.sort();
   for (i = 0; i < sortCards.length; i++) {
     name = sortCards[i]
-    returnString += dict[name] + " " + name + "\r\n";
+    
+    //Tag Adding Section here
+    if (isLoaded) {
+      //console.log(name);
+      var cardImage = GetImage(database, name);
+      var aTag = CreateATag(cardImage, name, dict[name]);
+
+      //console.log(aTag);
+      deckElem.appendChild(aTag);
+      //deckElem.append(document.createElement("br"));
+    }
   }
-
-
-  //Set return string here
-
-  deckElem.textContent = returnString;
-
-  //Add all info to a dictionary.
-
-  //Sort alphabetically.
-
-  //Add to string.
-
-  //put string onto deck card.
-
 }
 
 
@@ -131,6 +143,10 @@ function compareDecks() {
 
   deck1 = deck1Elem.textContent;
   deck2 = deck2Elem.textContent;
+
+  console.log(deck1);
+  console.log(deck1.childNodes);
+  console.log(deck1.children);
 
   var list1 = deck1.split("\r\n");
   var list2 = deck2.split("\r\n");
@@ -275,6 +291,8 @@ function DecipherForDek(cardList) {
   sortMB.sort();
   for (i = 0; i < sortMB.length; i++) {
     name = sortMB[i]
+
+    // TODO: Change this to database adding
     mainBoard += dictMB[name] + " " + name + "\r\n";
   }
 
@@ -282,12 +300,58 @@ function DecipherForDek(cardList) {
   sortSB.sort();
   for (i = 0; i < sortSB.length; i++) {
     name = sortSB[i]
+
+    // TODO: Change this to database adding
     sideBoard += dictSB[name] + " " + name + "\r\n";
   }
   
 
+  // TODO: Change this return statement
   return mainBoard + "\r\n" + sideBoard;
 
 }
+
+// Loading the database
+
+function LoadHelper (d) {
+  database = d;
+  isLoaded = true;
+  console.log("dbLoaded");
+}
+
+var dataFile = fetch("res/databases/scryfall-cleaned.json")
+                .then(response => response.json())
+                .then(data => LoadHelper(data));
+
+//Loading the database end
+
+// Creating an 'a' Tag function
+
+function CreateATag (imgName, cardName, qty) {
+  var dataContent = '<img src="' + imgName + '"></img>';
+
+  var newCard = document.createElement("a");
+  newCard.textContent = qty + " " +cardName+ "\r\n";
+  newCard.setAttribute("data-trigger", "hover");
+  newCard.setAttribute("data-toggle", "popover");
+  newCard.setAttribute("data-html", "true");
+  newCard.setAttribute("data-content", dataContent);
+  $(function () {
+    $('[data-toggle="popover"]').popover()
+  })
+  return newCard;
+  
+  /*
+  var placementDiv = document.getElementById("display-div");
+  placementDiv.appendChild(newCard);
+  placementDiv.append(document.createElement("br"));
+  //We have to make it the site see this as a popover by running this at the end
+  */
+} 
+
+function GetImage(db, textName) {
+  return db[textName.toLowerCase()]["small"];
+}
+
 
 
