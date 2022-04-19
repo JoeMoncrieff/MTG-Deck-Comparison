@@ -25,14 +25,7 @@ function buttonClick(buttonNumber) {
     reader.onload = readerEvent => {
       var content = readerEvent.target.result; // this is the content!
 
-      //Depending on the file type we would like to do things to it first
-      if (fileExt.toUpperCase() == "DEK") {
-        content = DecipherForDek(content)
-      }
 
-
-      //We make a function to display the content here :)
-      console.log(content);
       var deckDisp;
       if (buttonNumber == 1) {
         deckDisp = document.getElementById('card-1')
@@ -40,14 +33,53 @@ function buttonClick(buttonNumber) {
         deckDisp = document.getElementById('card-2')
       }
 
-      deckDisp.textContent = content;
 
+      //Depending on the file type we need to decipher it in different ways
+      if (fileExt.toUpperCase() == "DEK") {
+        DecipherForDek(content, deckDisp);
+      } else if (fileExt.toUpperCase() == "TXT") {
+        var dict = {};
+        var qty;
+
+
+        var contentArray = content.split("\r\n");
+        for (i = 0; i < contentArray.length; i++) {
+          
+          if (contentArray[i] == ""){
+            continue;
+          } else {
+            qty = 0;
+            var name = "";
+            line = contentArray[i].trim();
+            lineParts = line.split(" ");
+            
+            qty = lineParts[0];
+            name = line.substring(qty.length).trim("").toLowerCase();
+            console.log(name);
+            name=name.trim("");
+            qty = parseInt(qty);
+            
+        
+            if (name in dict){
+              dict[name] += qty;
+            } else {
+              dict[name] = qty;
+            } 
+          }
+        }
+
+        sortCards = Object.keys(dict)
+        sortCards.sort();
+        console.log(sortCards);
+
+        addListToDeckCard(dict, sortCards, deckDisp, true);
+      }
     }
   }
-
   input.click();
 }
 
+//Helper function for sort array
 function splitLists(listToSplit) {
   //put into arrays
   var nonumlist = []
@@ -118,22 +150,36 @@ function addCopyPaste(number) {
   }
   sortCards = Object.keys(dict)
   sortCards.sort();
-  for (i = 0; i < sortCards.length; i++) {
-    name = sortCards[i]
+
+  addListToDeckCard(dict, sortCards, deckElem, true);
+}
+
+//This function converts dicts into popover tags ustilising the database
+function addListToDeckCard(nameQtyDict, sortedNameList, deckElement, removePrevious) 
+{
+  //remove previous list if not strictly additive;
+  if (removePrevious) {
+    deckElement.textContent = "";
+  } else {
+    var space = document.createElement("p");
+    space.textContent = "\r\n";
+    deckElement.appendChild(space);
+  }
+  for (i = 0; i < sortedNameList.length; i++) {
+    var name = sortedNameList[i];
     
     //Tag Adding Section here
     if (isLoaded) {
       //console.log(name);
+      
       var cardImage = GetImage(database, name);
-      var aTag = CreateATag(cardImage, name, dict[name]);
+      var aTag = CreateATag(cardImage, name, nameQtyDict[name]);
 
       //console.log(aTag);
-      deckElem.appendChild(aTag);
-      //deckElem.append(document.createElement("br"));
+      deckElement.appendChild(aTag);
     }
   }
 }
-
 
 function compareDecks() {
 
@@ -239,7 +285,7 @@ function addToComparison(arr, sign) {
 //we are given a Dek file in string format
 //cards or in the form: <Cards CatID="23248" Quantity="2" Sideboard="false" Name="Selesnya Sanctuary" Annotation="0" />
 
-function DecipherForDek(cardList) {
+function DecipherForDek(cardList, deckElement) {
   var mainBoard = ""
   var sideBoard = ""
   var dictMB = {}
@@ -264,7 +310,7 @@ function DecipherForDek(cardList) {
 
       for (j = 0; j < attachments.length; j = j + 2) {
         curr = attachments[j];
-        console.log(curr);
+        //console.log(curr);
         if (curr.trim() == "Quantity=".trim()) {
           qty = attachments[j+1]
         } else if (curr.trim() == "Sideboard=".trim()) {
@@ -289,26 +335,13 @@ function DecipherForDek(cardList) {
   //Mass sorting alphabetically
   sortMB = Object.keys(dictMB)
   sortMB.sort();
-  for (i = 0; i < sortMB.length; i++) {
-    name = sortMB[i]
-
-    // TODO: Change this to database adding
-    mainBoard += dictMB[name] + " " + name + "\r\n";
-  }
+  
+  addListToDeckCard(dictMB,sortMB,deckElement,true);
 
   sortSB = Object.keys(dictSB);
   sortSB.sort();
-  for (i = 0; i < sortSB.length; i++) {
-    name = sortSB[i]
-
-    // TODO: Change this to database adding
-    sideBoard += dictSB[name] + " " + name + "\r\n";
-  }
   
-
-  // TODO: Change this return statement
-  return mainBoard + "\r\n" + sideBoard;
-
+  addListToDeckCard(dictSB,sortSB,deckElement,false);
 }
 
 // Loading the database
@@ -328,7 +361,14 @@ var dataFile = fetch("res/databases/scryfall-cleaned.json")
 // Creating an 'a' Tag function
 
 function CreateATag (imgName, cardName, qty) {
-  var dataContent = '<img src="' + imgName + '"></img>';
+  
+  var dataContent;
+  if (imgName == "notfound") {
+    dataContent = '<img src="res/databases/CardNotFoundSmall.png"></img>';
+  } else {
+    dataContent = '<img src="' + imgName + '"></img>';
+  }
+
 
   var newCard = document.createElement("a");
   newCard.textContent = qty + " " +cardName+ "\r\n";
@@ -340,18 +380,26 @@ function CreateATag (imgName, cardName, qty) {
     $('[data-toggle="popover"]').popover()
   })
   return newCard;
-  
-  /*
-  var placementDiv = document.getElementById("display-div");
-  placementDiv.appendChild(newCard);
-  placementDiv.append(document.createElement("br"));
-  //We have to make it the site see this as a popover by running this at the end
-  */
 } 
 
 function GetImage(db, textName) {
-  return db[textName.toLowerCase()]["small"];
+  //TODO: Issue with double-faced cards - look into solutions;
+  if (typeof db[textName.toLowerCase()] !== "undefined"){
+    return db[textName.toLowerCase()]["small"];
+  } else {
+    return "notfound";
+  }
+  
+
+  // if (textName.toLowerCase() in Object.keys(db)){
+  //   return db[textName.toLowerCase()]["small"];
+  // } else {
+  //   console.log(db);
+  //   return false
+  // }
+  
 }
+
 
 
 
